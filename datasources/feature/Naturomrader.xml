@@ -78,33 +78,25 @@
 		<Primitive path="app:opprinneligReferanseSystem" mapping="[opprinneligReferansesystem]"/>
 		<Primitive path="app:gridOppløsning" mapping="[oppløsning]"/>
 	</FeatureTypeMapping>
-	<!--   
-  <FeatureTypeMapping name="app:Naturområde" table="app_naturområde">
+	  
+  <FeatureTypeMapping name="app:Naturområde" table="[Naturområde]">
     <FIDMapping prefix="APP_NATUROMRÅDE_">
-      <Column name="attr_gml_id" type="string"/>
-      <UUIDGenerator/>
+      <Column name="[localId]" type="string"/>
     </FIDMapping>
-    <Complex path="gml:identifier">
-      <Primitive path="text()" mapping="gml_identifier"/>
-      <Primitive path="@codeSpace" mapping="gml_identifier_attr_codespace"/>
-    </Complex>
     <Complex path="app:unikId">
       <Complex path="app:Identifikasjon">
-        <Primitive path="app:lokalId" mapping="app_unikid_app_identifikasjon_app_lokalid"/>
-        <Primitive path="app:navnerom" mapping="app_unikid_app_identifikasjon_app_navnerom"/>
-        <Primitive path="app:versjonId" mapping="app_unikid_app_identifikasjon_app_versjonid"/>
+        <Primitive path="app:lokalId" mapping="[localId]"/>
+        <Primitive path="app:navnerom" mapping="[navnerom]"/>
+        <Primitive path="app:versjonId" mapping="[versjonId]"/>
       </Complex>
     </Complex>
-    <Primitive path="app:tematiskId" mapping="app_tematiskid"/>
-    <Primitive path="app:versjon" mapping="app_versjon"/>
-    <Primitive path="app:nivå" mapping="app_nivå"/>
+    <Primitive path="app:tematiskId" mapping="[tematiskId]"/>
+    <Primitive path="app:versjon" mapping="[versjon]"/>
+    <Primitive path="app:nivå" mapping="[naturnivå_id]"/>
     <Complex path="app:geometri">
-      <Primitive path="@nilReason" mapping="app_geometri_attr_nilreason"/>
-      <Primitive path="@gml:remoteSchema" mapping="app_geometri_attr_gml_remoteschema"/>
-      <Primitive path="@owns" mapping="app_geometri_attr_owns"/>
-      <Geometry path="." mapping="app_geometri_value"/>
+      <Geometry path="." mapping="[geometri]"/>
     </Complex>
-    <Complex path="app:stedfestingskvalitet">
+    <!-- <Complex path="app:stedfestingskvalitet">
       <Complex path="app:Posisjonskvalitet">
         <Complex path="app:målemetode">
           <Primitive path="text()" mapping="app_stedfestingskvalitet_app_posisjonskvalitet_app_målemetode"/>
@@ -119,8 +111,8 @@
         <Primitive path="app:nøyaktighetHøyde" mapping="app_stedfestingskvalitet_app_posisjonskvalitet_app_nøyaktighethøyde"/>
         <Primitive path="app:maksimaltAvvik" mapping="app_stedfestingskvalitet_app_posisjonskvalitet_app_maksimaltavvik"/>
       </Complex>
-    </Complex>
-    <Primitive path="app:totalKlassifikasjonsKvalitet" mapping="app_totalklassifikasjonskvalitet"/>
+    </Complex> -->
+    <!-- <Primitive path="app:totalKlassifikasjonsKvalitet" mapping="app_totalklassifikasjonskvalitet"/>
     <Primitive path="app:mosaikk" mapping="app_mosaikk"/>
     <Complex path="app:rødlisteStatus">
       <Complex path="app:Rødliste">
@@ -141,49 +133,49 @@
           </Complex>
         </Complex>
       </Complex>
-    </Complex>
-    <Primitive path="app:kartlagtDato" mapping="app_kartlagtdato"/>
-    <Primitive path="app:kartleggingsMålestokk" mapping="app_kartleggingsmålestokk"/>
+    </Complex> -->
+    <Primitive path="app:kartlagtDato" mapping="[kartlagt]"/>
+    <!-- <Primitive path="app:kartleggingsMålestokk" mapping="app_kartleggingsmålestokk"/>
     <Complex path="app:kartlagtOmråde">
       <Complex path="app:URI">
         <Primitive path="app:uri" mapping="app_kartlagtområde_app_uri_app_uri"/>
       </Complex>
-    </Complex>
-    <Primitive path="app:beskrivelse" mapping="app_beskrivelse"/>
+    </Complex> -->
+    <Primitive path="app:beskrivelse" mapping="[beskrivelse]"/>
     <Complex path="app:dokument">
-      <Join table="app_naturområde_app_dokument" fromColumns="attr_gml_id" toColumns="parentfk" orderColumns="num" numbered="true"/>
+      <Join table="[dokument_forfatter_view]" fromColumns="[id]" toColumns="[naturområde_id]"/>
       <Complex path="app:Dokument">
-        <Primitive path="app:dokumentType" mapping="app_dokument_app_dokumenttype"/>
-        <Primitive path="app:tittel" mapping="app_dokument_app_tittel"/>
-        <Primitive path="app:beskrivelse" mapping="app_dokument_app_beskrivelse"/>
-        <Complex path="app:forfatter">
-          <Complex path="app:Kontaktinformasjon">
-            <Primitive path="app:firmaNavn" mapping="app_dokument_app_forfatter_app_kontaktinformasjon_app_firmanavn"/>
-            <Primitive path="app:kontaktPerson" mapping="app_dokument_app_forfatter_app_kontaktinformasjon_app_kontaktperson"/>
-            <Primitive path="app:email" mapping="app_dokument_app_forfatter_app_kontaktinformasjon_app_email"/>
-            <Primitive path="app:telefon" mapping="app_dokument_app_forfatter_app_kontaktinformasjon_app_telefon"/>
-            <Complex path="app:hjemmeside">
-              <Complex path="app:URI">
-                <Primitive path="app:uri" mapping="app_dokument_app_forfatter_app_kontaktinformasjon_app_hjemmeside_app_uri_app_uri"/>
-              </Complex>
-            </Complex>
-          </Complex>
-        </Complex>
-        <Complex path="app:fil">
-          <Complex path="app:URI">
-            <Primitive path="app:uri" mapping="app_dokument_app_fil_app_uri_app_uri"/>
-          </Complex>
-        </Complex>
-      </Complex>
+				<Primitive path="app:dokumentType" mapping="'app_dokument_app_dokumenttype'"/>
+				<Primitive path="app:tittel" mapping="[tittel]"/>
+				<Primitive path="app:beskrivelse" mapping="[beskrivelse]"/>
+				<Complex path="app:forfatter">
+					<Complex path="app:Kontaktinformasjon">
+						<Primitive path="app:firmaNavn" mapping="[firmanavn]"/>
+						<Primitive path="app:kontaktPerson" mapping="[kontaktperson]"/>
+						<Primitive path="app:email" mapping="[epost]"/>
+						<Primitive path="app:telefon" mapping="[telefon]"/>
+						<Complex path="app:hjemmeside">
+							<Complex path="app:URI">
+								<Primitive path="app:uri" mapping="[hjemmeside]"/>
+							</Complex>
+						</Complex>
+					</Complex>
+				</Complex>
+				<Complex path="app:fil">
+					<Complex path="app:URI">
+						<Primitive path="app:uri" mapping="[filsti]"/>
+					</Complex>
+				</Complex>
+			</Complex>
     </Complex>
-    <Primitive path="app:opprinneligKode" mapping="app_opprinneligkode"/>
-    <Complex path="app:forvaltningsPrioritet">
+    <!-- <Primitive path="app:opprinneligKode" mapping="app_opprinneligkode"/> -->
+    <!-- <Complex path="app:forvaltningsPrioritet">
       <Complex path="app:ForvaltningsPrioritet">
         <Primitive path="app:sektorMyndighet" mapping="app_forvaltningsprioritet_app_forvaltningsprioritet_app_sektormyndighet"/>
         <Primitive path="app:forvaltningsPrioritet" mapping="app_forvaltningsprioritet_app_forvaltningsprioritet_app_forvaltningsprioritet"/>
         <Primitive path="app:forvaltningsKriterium" mapping="app_forvaltningsprioritet_app_forvaltningsprioritet_app_forvaltningskriterium"/>
       </Complex>
-    </Complex>
-    <Primitive path="app:bruksbegrensning" mapping="app_bruksbegrensning"/>
-  </FeatureTypeMapping> -->
+    </Complex> -->
+    <!-- <Primitive path="app:bruksbegrensning" mapping="app_bruksbegrensning"/> -->
+  </FeatureTypeMapping>
 </SQLFeatureStore>
