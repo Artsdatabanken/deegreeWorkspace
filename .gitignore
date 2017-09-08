@@ -1,0 +1,4 @@
+jdbc/
+manager/password.txt
+datasources/feature/bbox_cache.properties
+crs/

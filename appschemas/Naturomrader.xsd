@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:app="http://skjema.artsdatabanken.no/NiNCore/Naturomrader" xmlns:gml="http://www.opengis.net/gml/3.2" elementFormDefault="qualified" targetNamespace="http://skjema.artsdatabanken.no/NiNCore/Naturomrader" version="0.5">
+  <annotation>
+    <documentation>Produktspesifikasjon for NiN Core GML Naturområder</documentation>
+  </annotation>
+  <import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <element abstract="true" name="BeskrivelsesParameter" substitutionGroup="gml:AbstractObject" type="app:BeskrivelsesParameterType">
+    <annotation>
+      <documentation>&lt;b&gt;BeskrivelsesParameter&lt;/b&gt;
+Overordnet abstrakt objekttype for ulike naturfaglige beskrivelser av naturområdet</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="BeskrivelsesParameterType">
+    <sequence>
+      <element name="kodeverdi">
+        <annotation>
+          <documentation>Registrert verdi for unik standardisert kode (enten NaturområdeType eller BeskrivelsesVariabel).</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="tematiskId" type="string">
+        <annotation>
+          <documentation>Dataeiers ident for beskrivelsesparameteren</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="kartlegger">
+        <annotation>
+          <documentation>Kontaktinformasjon for person som utførte feltarbeidet</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="kartlagtDato" type="dateTime">
+        <annotation>
+          <documentation>Dato for feltarbeid</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="klassifikasjonsNøyaktighet">
+        <annotation>
+          <documentation>Opplysning om registreringens kvalitet</documentation>
+        </annotation>
+      </element>
+      <element maxOccurs="unbounded" minOccurs="0" name="tilleggsinformasjon" type="app:EgendefinertVariabelPropertyType"/>
+      <element maxOccurs="unbounded" minOccurs="0" name="tilleggsvariabel" type="app:BeskrivelsesParameterPropertyType"/>
+    </sequence>
+  </complexType>
+  <complexType name="BeskrivelsesParameterPropertyType">
+    <sequence>
+      <element ref="app:BeskrivelsesParameter"/>
+    </sequence>
+  </complexType>
+  <element name="Beskrivelsesvariabel" substitutionGroup="app:BeskrivelsesParameter" type="app:BeskrivelsesvariabelType">
+    <annotation>
+      <documentation>&lt;b&gt;Beskrivelsesvariabel&lt;/b&gt;
+Egenskap ved naturområdet hentet fra Natur i Norges beskrivelsessystem</documentation>
+    </annotation>
+  </element>
+  <complexType name="BeskrivelsesvariabelType">
+    <complexContent>
+      <extension base="app:BeskrivelsesParameterType">
+        <sequence>
+          <element name="trinn" type="string">
+            <annotation>
+              <documentation>Den konkrete beskrivelsesvariabelens trinnverdi</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="variabelNavn">
+            <annotation>
+              <documentation>Variabelnavn avledet av registrert kode</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="variabelTema">
+            <annotation>
+              <documentation>Den konkrete beskrivelsesvariabelens tema
+Avledes av kodeverdien</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="variabelGruppe">
+            <annotation>
+              <documentation>Den konkrete beskrivelsesvariabelens variabelgruppe
+Avledes av kodeverdien</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="beskrivelse" type="string">
+            <annotation>
+              <documentation>Tekstlig beskrivelse knyttet til observasjonen</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="BeskrivelsesvariabelPropertyType">
+    <sequence>
+      <element ref="app:Beskrivelsesvariabel"/>
+    </sequence>
+  </complexType>
+  <element name="EgendefinertVariabel" substitutionGroup="gml:AbstractObject" type="app:EgendefinertVariabelType">
+    <annotation>
+      <documentation>&lt;b&gt;EgendefinertVariable&lt;/b&gt;
+Registrering av dataeiers egendefinerte variabel som knyttes til en naturområdetype</documentation>
+    </annotation>
+  </element>
+  <complexType name="EgendefinertVariabelType">
+    <sequence>
+      <element name="kodeverdi" type="string">
+        <annotation>
+          <documentation>Kode (betegnelsen) for den egendefinerte variabelen.</documentation>
+        </annotation>
+      </element>
+      <element name="kodeDefinisjon" type="string">
+        <annotation>
+          <documentation>Definisjon av egendefinert variabel. 
+Avledes fra informasjon i kartlagt område som naturområdet tilhører</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="trinn" type="string">
+        <annotation>
+          <documentation>Trinn (verdi) for den egendefinerte variabelen.</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="kartlegger">
+        <annotation>
+          <documentation>Kartlegger med kontaktinformasjon</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="kartlagtDato" type="dateTime">
+        <annotation>
+          <documentation>Dato for registrering av variabel</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="klassifikasjonsNøyaktighet">
+        <annotation>
+          <documentation>Kvalitet på registreringen</documentation>
+        </annotation>
+      </element>
+      <element name="kodeDefinertVed" type="app:EgendefinertVariabelDefinisjonPropertyType"/>
+    </sequence>
+  </complexType>
+  <complexType name="EgendefinertVariabelPropertyType">
+    <sequence>
+      <element ref="app:EgendefinertVariabel"/>
+    </sequence>
+  </complexType>
+  <element name="EgendefinertVariabelDefinisjon" substitutionGroup="gml:AbstractObject" type="app:EgendefinertVariabelDefinisjonType">
+    <annotation>
+      <documentation>&lt;b&gt;EgendefinertVariabelDefinisjon&lt;/b&gt;
+Dataeiers definisjon av en egendefinerte variabel som knyttes til en naturområdetype.</documentation>
+    </annotation>
+  </element>
+  <complexType name="EgendefinertVariabelDefinisjonType">
+    <sequence>
+      <element name="betegnelse" type="string">
+        <annotation>
+          <documentation>Betegnelse (kode) for egendefinert variabel</documentation>
+        </annotation>
+      </element>
+      <element name="beskrivelse" type="string">
+        <annotation>
+          <documentation>Faglig beskrivelse (definisjon) av egendefinert variabel</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="EgendefinertVariabelDefinisjonPropertyType">
+    <sequence>
+      <element ref="app:EgendefinertVariabelDefinisjon"/>
+    </sequence>
+  </complexType>
+  <element name="ForvaltningsPrioritet" substitutionGroup="gml:AbstractObject" type="app:ForvaltningsPrioritetType">
+    <annotation>
+      <documentation>Forvaltningsspesifikk verdisetting, eksempel: forvaltningsprioriterte naturtyper i regi av Miljødirektoratet</documentation>
+    </annotation>
+  </element>
+  <complexType name="ForvaltningsPrioritetType">
+    <sequence>
+      <element name="sektorMyndighet" type="string">
+        <annotation>
+          <documentation>Sektor med ansvar for forvaltning av naturområder</documentation>
+        </annotation>
+      </element>
+      <element name="forvaltningsPrioritet" type="string">
+        <annotation>
+          <documentation>Den enkelte sektors prioritering av naturområder</documentation>
+        </annotation>
+      </element>
+      <element name="forvaltningsKriterium" type="string">
+        <annotation>
+          <documentation>Kriterium for forvaltningsprioritering, f.eks utvalgt naturtype</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="ForvaltningsPrioritetPropertyType">
+    <sequence>
+      <element ref="app:ForvaltningsPrioritet"/>
+    </sequence>
+  </complexType>
+  <element name="Identifikasjon" substitutionGroup="gml:AbstractObject" type="app:IdentifikasjonType">
+    <annotation>
+      <documentation>Unik identifikasjon av et objekt i et datasett, forvaltet av den ansvarlige produsent/forvalter, og kan benyttes av eksterne applikasjoner som stabil referanse til objektet. 
+
+Merknad 1: Denne objektidentifikasjonen må ikke forveksles med en tematisk objektidentifikasjon, slik som f.eks bygningsnummer. 
+
+Merknad 2: Denne unike identifikatoren vil ikke endres i løpet av objektets levetid, og ikke gjenbrukes i andre objekt.</documentation>
+    </annotation>
+  </element>
+  <complexType name="IdentifikasjonType">
+    <sequence>
+      <element name="lokalId" type="string">
+        <annotation>
+          <documentation>lokal identifikator av et objekt
+
+Merknad: Det er dataleverendørens ansvar å sørge for at den lokale identifikatoren er unik innenfor navnerommet.</documentation>
+        </annotation>
+      </element>
+      <element name="navnerom" type="string">
+        <annotation>
+          <documentation>navnerom som unikt identifiserer datakilden til et objekt, anbefales å være en http-URI
+
+Eksempel: http://data.geonorge.no/SentraltStedsnavnsregister/1.0
+
+Merknad : Verdien for nanverom vil eies av den dataprodusent som har ansvar for de unike identifikatorene og må være registrert i data.geonorge.no eller data.norge.no</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="versjonId" type="string">
+        <annotation>
+          <documentation>identifikasjon av en spesiell versjon av et geografisk objekt (instans)</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="IdentifikasjonPropertyType">
+    <sequence>
+      <element ref="app:Identifikasjon"/>
+    </sequence>
+  </complexType>
+  <element name="KartlagtOmråde" substitutionGroup="gml:AbstractFeature" type="app:KartlagtOmrådeType">
+    <annotation>
+      <documentation>&lt;b&gt;Kartlagt område&lt;/b&gt;
+Geografisk område som avgrenser datafangst for et aktuelt kartleggingsprosjekt.</documentation>
+    </annotation>
+  </element>
+  <complexType name="KartlagtOmrådeType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="unikId" type="app:IdentifikasjonPropertyType">
+            <annotation>
+              <documentation>&lt;b&gt;unikID&lt;/b&gt;
+GUID for kartlagt område</documentation>
+            </annotation>
+          </element>
+          <element name="program" type="string">
+            <annotation>
+              <documentation>Navn på Kartleggingsprogram</documentation>
+            </annotation>
+          </element>
+          <element name="prosjektnavn" type="string">
+            <annotation>
+              <documentation>Prosjekt under kartleggingsprgram</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="prosjektbeskrivelse" type="string">
+            <annotation>
+              <documentation>Beskrivelse av prosjektet</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="formål" type="string">
+            <annotation>
+              <documentation>Prosjektets formål</documentation>
+            </annotation>
+          </element>
+          <element name="oppdragsgiver" type="app:KontaktinformasjonPropertyType">
+            <annotation>
+              <documentation>Kontaktinformasjon for oppdragsgiver av kartlegging</documentation>
+            </annotation>
+          </element>
+          <element name="eier" type="app:KontaktinformasjonPropertyType">
+            <annotation>
+              <documentation>Kontaktinformasjon for dataeier</documentation>
+            </annotation>
+          </element>
+          <element name="kartlagtFraDato" type="dateTime">
+            <annotation>
+              <documentation>Første dag for feltarbeid</documentation>
+            </annotation>
+          </element>
+          <element name="kartlagtTilDato" type="dateTime">
+            <annotation>
+              <documentation>Siste dag for feltarbeid</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="dekningsOmråde" type="gml:SurfacePropertyType">
+            <annotation>
+              <documentation>Kartlagt område avgrenset med koordinater</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="dokument" type="string">
+            <annotation>
+              <documentation>Referanse til relevante dokumenter for kartleggingsprosjektet</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="opprinneligReferanseSystem" type="string">
+            <annotation>
+              <documentation>Kodesystem brukt under kartlegging, f.eks DNs håndbok 13</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="gridOppløsning" type="string">
+            <annotation>
+              <documentation>Lengde/bredde på gridnett. Brukes for modellerte kart (i gridformat)</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="KartlagtOmrådePropertyType">
+    <sequence minOccurs="0">
+      <element ref="app:KartlagtOmråde"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="Kontaktinformasjon" substitutionGroup="gml:AbstractObject" type="app:KontaktinformasjonType">
+    <annotation>
+      <documentation>&lt;b&gt;Kontaktinformasjon&lt;/b&gt;
+Kontaktinformasjon til ansvarlig firma/etat/institusjon og ansatt</documentation>
+    </annotation>
+  </element>
+  <complexType name="KontaktinformasjonType">
+    <sequence>
+      <element name="firmaNavn" type="string">
+        <annotation>
+          <documentation>Navn på Firma/Etat</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="kontaktPerson" type="string">
+        <annotation>
+          <documentation>Navn på kontaktperson i firma/etat</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="email" type="string">
+        <annotation>
+          <documentation>Emailadresse</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="telefon" type="string">
+        <annotation>
+          <documentation>Telefonnummer</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="hjemmeside" type="string">
+        <annotation>
+          <documentation>Firmaets hjemmeside (URL)</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="KontaktinformasjonPropertyType">
+    <sequence>
+      <element ref="app:Kontaktinformasjon"/>
+    </sequence>
+  </complexType>
+  <simpleType name="NaturnivåType">
+    <annotation>
+      <documentation>&lt;b&gt;Naturnivå&lt;/b&gt;
+Natur i Norges naturmangfoldnivå</documentation>
+    </annotation>
+    <union memberTypes="app:NaturnivåEnumerationType app:NaturnivåOtherType"/>
+  </simpleType>
+  <simpleType name="NaturnivåEnumerationType">
+    <annotation>
+      <documentation>&lt;b&gt;Naturnivå&lt;/b&gt;
+Natur i Norges naturmangfoldnivå</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="Landskapstype">
+        <annotation>
+          <documentation>Natur i Norge landskapstype</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="Landskapsdel">
+        <annotation>
+          <documentation>Natur i Norge landskapsdel</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="Naturkompleks">
+        <annotation>
+          <documentation>Natur i Norge naturkompleks</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="Natursystem">
+        <annotation>
+          <documentation>Natur i Norge natursystem</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="Naturkomponent">
+        <annotation>
+          <documentation>Natur i Norge naturkomponent</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="Livsmedium">
+        <annotation>
+          <documentation>Natur i Norge livsmedium</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="Egenskapsområde">
+        <annotation>
+          <documentation>Område basert på Natur i Norges beskrivelssystem eller miljøvariabler</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="NaturnivåOtherType">
+    <restriction base="string">
+      <pattern value="other: \w{2,}"/>
+    </restriction>
+  </simpleType>
+  <element name="Naturområde" substitutionGroup="gml:AbstractFeature" type="app:NaturområdeType">
+    <annotation>
+      <documentation>&lt;b&gt;Naturområde&lt;/b&gt;
+Geografisk objekt typifisert eller beskrevet ved hjelp av Natur i Norges type og-/eller beskrivelsessystem.
+
+.</documentation>
+    </annotation>
+  </element>
+  <complexType name="NaturområdeType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="unikId" type="app:IdentifikasjonPropertyType">
+            <annotation>
+              <documentation>GUID for Naturområdet (InspireID)</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="tematiskId" type="string">
+            <annotation>
+              <documentation>Dataeiers ident for naturområdet</documentation>
+            </annotation>
+          </element>
+          <element name="versjon" type="string">
+            <annotation>
+              <documentation>Naturområdets versjon. i oppdateringssammenheng</documentation>
+            </annotation>
+          </element>
+          <element name="nivå" type="app:NaturnivåType">
+            <annotation>
+              <documentation>Naturområdets hierarkiske nivå</documentation>
+            </annotation>
+          </element>
+          <element name="geometri" type="gml:GeometryPropertyType">
+            <annotation>
+              <documentation>Naturområdets stedfesting/utstrekning registert som punkt, linje eller flate.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="stedfestingskvalitet">
+            <annotation>
+              <documentation>Kvalitetsopplysninger om stedfestingen</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="totalKlassifikasjonsKvalitet">
+            <annotation>
+              <documentation>Kvalitet på registrerte beskrivelsesvariable i området. Klassifikasjonskvalitet for hver enkelt beskrivelsesvariable angis spesifikt for variablen.</documentation>
+            </annotation>
+          </element>
+          <element name="mosaikk" type="boolean">
+            <annotation>
+              <documentation>Verdi = True  hvis naturområdet er karakterisert med enn en naturområdetype</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="rødlisteStatus" type="app:RødlistePropertyType">
+            <annotation>
+              <documentation>Verdi er angitt hvis beskrivelsesparametre for naturområdet er karakterisert med en kombinasjon som gir tilslag i rødliste for naturtyper</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="kartlegger">
+            <annotation>
+              <documentation>Kontaktinformasjon for kartlegger</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="kartlagtDato" type="dateTime">
+            <annotation>
+              <documentation>Dato for feltarbeid</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="kartleggingsMålestokk" type="string">
+            <annotation>
+              <documentation>Målestokk for kartleggingen</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="kartlagtOmråde">
+            <annotation>
+              <documentation>Link til informasjon om kartleggingen</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="beskrivelse" type="string">
+            <annotation>
+              <documentation>Tekstlig  beskrivelse knyttet til kartleggingen av aktuelle naturområde</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="dokument">
+            <annotation>
+              <documentation>Referanse til dokumenter med relevans til kartlegging av aktuelle naturområde</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="opprinneligKode" type="string">
+            <annotation>
+              <documentation>Kode fra opprinnelig kartlegging, f.eks fra DN's håndbok 13</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="forvaltningsPrioritet" type="app:ForvaltningsPrioritetPropertyType">
+            <annotation>
+              <documentation>Sektorspesifikk priortering</documentation>
+            </annotation>
+          </element>
+          <element name="bruksbegrensning">
+            <annotation>
+              <documentation>Angir om data  kan endres av andre enn forvalter</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="beskrivesVed" type="app:BeskrivelsesParameterPropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="NaturområdePropertyType">
+    <sequence minOccurs="0">
+      <element ref="app:Naturområde"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element name="Naturområdetype" substitutionGroup="app:BeskrivelsesParameter" type="app:NaturområdetypeType">
+    <annotation>
+      <documentation>&lt;b&gt;Naturområdetype&lt;/b&gt;
+Typebetegnelse hentet fra Artsdatabankens standardiserte koderegistre for Natur i Norge</documentation>
+    </annotation>
+  </element>
+  <complexType name="NaturområdetypeType">
+    <complexContent>
+      <extension base="app:BeskrivelsesParameterType">
+        <sequence>
+          <element name="andel" type="double">
+            <annotation>
+              <documentation>Andel av total, målt i tideler, jf. mosaikk</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="hovedtypegruppe">
+            <annotation>
+              <documentation>Hovedtypegruppe innenfor gjeldende naturnivå. 
+Avledes av registrert kode</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="hovedtype">
+            <annotation>
+              <documentation>Hovedtype innenfor gjeldende naturnivå. 
+Avledes av registrert kode.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="grunntype">
+            <annotation>
+              <documentation>Grunntype/Kartleggingsenhet innenfor gjeldende naturnivå. 
+Avledes av registrert kode</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="NaturområdetypePropertyType">
+    <sequence>
+      <element ref="app:Naturområdetype"/>
+    </sequence>
+  </complexType>
+  <element name="Rødliste" substitutionGroup="gml:AbstractObject" type="app:RødlisteType">
+    <annotation>
+      <documentation>Referanse til rødliste for naturtyper</documentation>
+    </annotation>
+  </element>
+  <complexType name="RødlisteType">
+    <sequence>
+      <element name="versjon" type="string">
+        <annotation>
+          <documentation>Versjon av rødliste for naturtyper</documentation>
+        </annotation>
+      </element>
+      <element name="status" type="string">
+        <annotation>
+          <documentation>Status for rødliste for naturtyper</documentation>
+        </annotation>
+      </element>
+      <element name="kriterium" type="string">
+        <annotation>
+          <documentation>Kriterium for status for rødliste for naturtyper</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="RødlistePropertyType">
+    <sequence>
+      <element ref="app:Rødliste"/>
+    </sequence>
+  </complexType>
+</schema>
