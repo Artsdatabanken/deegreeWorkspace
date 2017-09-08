@@ -12,7 +12,7 @@ Overordnet abstrakt objekttype for ulike naturfaglige beskrivelser av naturområ
   </element>
   <complexType abstract="true" name="BeskrivelsesParameterType">
     <sequence>
-      <element name="kodeverdi">
+      <element name="kodeverdi" type="app:KodePropertyType">
         <annotation>
           <documentation>Registrert verdi for unik standardisert kode (enten NaturområdeType eller BeskrivelsesVariabel).</documentation>
         </annotation>
@@ -22,7 +22,7 @@ Overordnet abstrakt objekttype for ulike naturfaglige beskrivelser av naturområ
           <documentation>Dataeiers ident for beskrivelsesparameteren</documentation>
         </annotation>
       </element>
-      <element minOccurs="0" name="kartlegger">
+      <element minOccurs="0" name="kartlegger" type="app:KontaktinformasjonPropertyType">
         <annotation>
           <documentation>Kontaktinformasjon for person som utførte feltarbeidet</documentation>
         </annotation>
@@ -32,7 +32,7 @@ Overordnet abstrakt objekttype for ulike naturfaglige beskrivelser av naturområ
           <documentation>Dato for feltarbeid</documentation>
         </annotation>
       </element>
-      <element minOccurs="0" name="klassifikasjonsNøyaktighet">
+      <element minOccurs="0" name="klassifikasjonsNøyaktighet" type="app:NøyaktighetsklasseType">
         <annotation>
           <documentation>Opplysning om registreringens kvalitet</documentation>
         </annotation>
@@ -61,18 +61,18 @@ Egenskap ved naturområdet hentet fra Natur i Norges beskrivelsessystem</documen
               <documentation>Den konkrete beskrivelsesvariabelens trinnverdi</documentation>
             </annotation>
           </element>
-          <element minOccurs="0" name="variabelNavn">
+          <element minOccurs="0" name="variabelNavn" type="app:KodePropertyType">
             <annotation>
               <documentation>Variabelnavn avledet av registrert kode</documentation>
             </annotation>
           </element>
-          <element minOccurs="0" name="variabelTema">
+          <element minOccurs="0" name="variabelTema" type="app:KodePropertyType">
             <annotation>
               <documentation>Den konkrete beskrivelsesvariabelens tema
 Avledes av kodeverdien</documentation>
             </annotation>
           </element>
-          <element minOccurs="0" name="variabelGruppe">
+          <element minOccurs="0" name="variabelGruppe" type="app:KodePropertyType">
             <annotation>
               <documentation>Den konkrete beskrivelsesvariabelens variabelgruppe
 Avledes av kodeverdien</documentation>
@@ -92,6 +92,91 @@ Avledes av kodeverdien</documentation>
       <element ref="app:Beskrivelsesvariabel"/>
     </sequence>
   </complexType>
+  <simpleType name="BruksbegrensningType">
+    <union memberTypes="app:BruksbegrensningEnumerationType app:BruksbegrensningOtherType"/>
+  </simpleType>
+  <simpleType name="BruksbegrensningEnumerationType">
+    <restriction base="string">
+      <enumeration value="Åpen"/>
+      <enumeration value="Kan ikke endres"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="BruksbegrensningOtherType">
+    <restriction base="string">
+      <pattern value="other: \w{2,}"/>
+    </restriction>
+  </simpleType>
+  <element name="Dokument" substitutionGroup="gml:AbstractObject" type="app:DokumentType">
+    <annotation>
+      <documentation>&lt;b&gt;Dokument&lt;/b&gt;
+inneholder indeksbeskrivelse (dokument metadata) og referanser til relaterte eksterne dokumenter,
+Tekst, bilder pg andre digitale avgrensede datasett som dataeier knytter til et kartlagt område eller naturområde</documentation>
+    </annotation>
+  </element>
+  <complexType name="DokumentType">
+    <sequence>
+      <element name="dokumentType" type="app:DokumentTypeType">
+        <annotation>
+          <documentation>Dokumentkategori definert iht kodeliste</documentation>
+        </annotation>
+      </element>
+      <element name="tittel" type="string">
+        <annotation>
+          <documentation>Dokumentets tittel</documentation>
+        </annotation>
+      </element>
+      <element name="beskrivelse" type="string">
+        <annotation>
+          <documentation>Kort tekstlig beskrivelse av dokumentets innhold</documentation>
+        </annotation>
+      </element>
+      <element name="forfatter" type="app:KontaktinformasjonPropertyType">
+        <annotation>
+          <documentation>Kontaktinformasjon til person som er ansvarlig for dokumentet</documentation>
+        </annotation>
+      </element>
+      <element name="fil" type="app:URIPropertyType">
+        <annotation>
+          <documentation>Lenke (arkivnøkkel) til dokumentet</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="DokumentPropertyType">
+    <sequence>
+      <element ref="app:Dokument"/>
+    </sequence>
+  </complexType>
+  <simpleType name="DokumentTypeType">
+    <annotation>
+      <documentation>&lt;b&gt;DokumentType&lt;/b&gt;
+Dokumentkategori, f.eks rapport, bilde,</documentation>
+    </annotation>
+    <union memberTypes="app:DokumentTypeEnumerationType app:DokumentTypeOtherType"/>
+  </simpleType>
+  <simpleType name="DokumentTypeEnumerationType">
+    <annotation>
+      <documentation>&lt;b&gt;DokumentType&lt;/b&gt;
+Dokumentkategori, f.eks rapport, bilde,</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="rapport">
+        <annotation>
+          <documentation>Tekstdokument</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="bilde">
+        <annotation>
+          <documentation>Digitalt bilde</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="DokumentTypeOtherType">
+    <restriction base="string">
+      <pattern value="other: \w{2,}"/>
+    </restriction>
+  </simpleType>
   <element name="EgendefinertVariabel" substitutionGroup="gml:AbstractObject" type="app:EgendefinertVariabelType">
     <annotation>
       <documentation>&lt;b&gt;EgendefinertVariable&lt;/b&gt;
@@ -116,7 +201,7 @@ Avledes fra informasjon i kartlagt område som naturområdet tilhører</document
           <documentation>Trinn (verdi) for den egendefinerte variabelen.</documentation>
         </annotation>
       </element>
-      <element minOccurs="0" name="kartlegger">
+      <element minOccurs="0" name="kartlegger" type="app:KontaktinformasjonPropertyType">
         <annotation>
           <documentation>Kartlegger med kontaktinformasjon</documentation>
         </annotation>
@@ -126,7 +211,7 @@ Avledes fra informasjon i kartlagt område som naturområdet tilhører</document
           <documentation>Dato for registrering av variabel</documentation>
         </annotation>
       </element>
-      <element minOccurs="0" name="klassifikasjonsNøyaktighet">
+      <element minOccurs="0" name="klassifikasjonsNøyaktighet" type="app:NøyaktighetsklasseType">
         <annotation>
           <documentation>Kvalitet på registreringen</documentation>
         </annotation>
@@ -164,6 +249,34 @@ Dataeiers definisjon av en egendefinerte variabel som knyttes til en naturområd
       <element ref="app:EgendefinertVariabelDefinisjon"/>
     </sequence>
   </complexType>
+  <element name="Endringsflagg" substitutionGroup="gml:AbstractObject" type="app:EndringsflaggType">
+    <annotation>
+      <documentation>endringsinformasjon om et objekt
+
+Merknad: 
+Inntil videre vil hele objektet merkes med endringsflagget.
+I det videre arbeidet (framtidige versjoner) vil denne kunne utvides, f.eks ved å angi om endringen er knyttet til geometrien, egenskapene eller relasjoner</documentation>
+    </annotation>
+  </element>
+  <complexType name="EndringsflaggType">
+    <sequence>
+      <element name="typeEndring" type="app:TypeEndringType">
+        <annotation>
+          <documentation>endringsstatus for objektet</documentation>
+        </annotation>
+      </element>
+      <element name="tidspunktEndring" type="dateTime">
+        <annotation>
+          <documentation>tidspunkt for endring av objektet</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="EndringsflaggPropertyType">
+    <sequence>
+      <element ref="app:Endringsflagg"/>
+    </sequence>
+  </complexType>
   <element name="ForvaltningsPrioritet" substitutionGroup="gml:AbstractObject" type="app:ForvaltningsPrioritetType">
     <annotation>
       <documentation>Forvaltningsspesifikk verdisetting, eksempel: forvaltningsprioriterte naturtyper i regi av Miljødirektoratet</documentation>
@@ -193,6 +306,34 @@ Dataeiers definisjon av en egendefinerte variabel som knyttes til en naturområd
       <element ref="app:ForvaltningsPrioritet"/>
     </sequence>
   </complexType>
+  <simpleType name="HøydereferanseType">
+    <annotation>
+      <documentation>koordinatregistering utført på topp eller bunn av et objekt</documentation>
+    </annotation>
+    <union memberTypes="app:HøydereferanseEnumerationType app:HøydereferanseOtherType"/>
+  </simpleType>
+  <simpleType name="HøydereferanseEnumerationType">
+    <annotation>
+      <documentation>koordinatregistering utført på topp eller bunn av et objekt</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="topp">
+        <annotation>
+          <documentation>Høyden målt til toppen av objektet</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="fot">
+        <annotation>
+          <documentation>Høyden målt til  foten av objektet</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="HøydereferanseOtherType">
+    <restriction base="string">
+      <pattern value="other: \w{2,}"/>
+    </restriction>
+  </simpleType>
   <element name="Identifikasjon" substitutionGroup="gml:AbstractObject" type="app:IdentifikasjonType">
     <annotation>
       <documentation>Unik identifikasjon av et objekt i et datasett, forvaltet av den ansvarlige produsent/forvalter, og kan benyttes av eksterne applikasjoner som stabil referanse til objektet. 
@@ -293,7 +434,7 @@ GUID for kartlagt område</documentation>
               <documentation>Kartlagt område avgrenset med koordinater</documentation>
             </annotation>
           </element>
-          <element maxOccurs="unbounded" minOccurs="0" name="dokument" type="string">
+          <element maxOccurs="unbounded" minOccurs="0" name="dokument" type="app:DokumentPropertyType">
             <annotation>
               <documentation>Referanse til relevante dokumenter for kartleggingsprosjektet</documentation>
             </annotation>
@@ -319,10 +460,44 @@ GUID for kartlagt område</documentation>
     <attributeGroup ref="gml:AssociationAttributeGroup"/>
     <attributeGroup ref="gml:OwnershipAttributeGroup"/>
   </complexType>
+  <element name="Kode" substitutionGroup="gml:AbstractObject" type="app:KodeType">
+    <annotation>
+      <documentation>&lt;b&gt;Kode&lt;/b&gt;
+Kode som er definert i Natur i Norges type- eller beskrivelsessystem</documentation>
+    </annotation>
+  </element>
+  <complexType name="KodeType">
+    <sequence>
+      <element name="koderegister" type="string">
+        <annotation>
+          <documentation>Navn på koderegister hvor koden er definert</documentation>
+        </annotation>
+      </element>
+      <element name="kodeversjon" type="string">
+        <annotation>
+          <documentation>Versjon av koderegister som koden kommer fra</documentation>
+        </annotation>
+      </element>
+      <element name="kode" type="string">
+        <annotation>
+          <documentation>Kodeverdi i koderegisteret</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="kodensURI" type="app:URIPropertyType">
+        <annotation>
+          <documentation>Lenke til koden og dens beskrivelse</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="KodePropertyType">
+    <sequence>
+      <element ref="app:Kode"/>
+    </sequence>
+  </complexType>
   <element name="Kontaktinformasjon" substitutionGroup="gml:AbstractObject" type="app:KontaktinformasjonType">
     <annotation>
-      <documentation>&lt;b&gt;Kontaktinformasjon&lt;/b&gt;
-Kontaktinformasjon til ansvarlig firma/etat/institusjon og ansatt</documentation>
+      <documentation>&lt;b&gt;Kontaktinformasjon&lt;/b&gt;&lt;b&gt;&lt;i&gt; &lt;/i&gt;&lt;/b&gt;definerer kontaktinformasjon til ansvarlig firma/etat/institusjon, ansatt  eller enkeltperson</documentation>
     </annotation>
   </element>
   <complexType name="KontaktinformasjonType">
@@ -347,7 +522,7 @@ Kontaktinformasjon til ansvarlig firma/etat/institusjon og ansatt</documentation
           <documentation>Telefonnummer</documentation>
         </annotation>
       </element>
-      <element minOccurs="0" name="hjemmeside" type="string">
+      <element minOccurs="0" name="hjemmeside" type="app:URIPropertyType">
         <annotation>
           <documentation>Firmaets hjemmeside (URL)</documentation>
         </annotation>
@@ -359,6 +534,129 @@ Kontaktinformasjon til ansvarlig firma/etat/institusjon og ansatt</documentation
       <element ref="app:Kontaktinformasjon"/>
     </sequence>
   </complexType>
+  <element name="Kopidata" substitutionGroup="gml:AbstractObject" type="app:KopidataType">
+    <annotation>
+      <documentation>angivelse av at objektet er hentet fra en kopi av originaldata
+
+Merknad: 
+Kan benyttes dersom man gjør et uttak av en database som ikke inneholder originaldataene.</documentation>
+    </annotation>
+  </element>
+  <complexType name="KopidataType">
+    <sequence>
+      <element name="områdeId" type="integer">
+        <annotation>
+          <documentation>identifikasjon av område som dataene dekker
+
+Merknad: Kan angis med kommunenummer eller fylkesnummer. Disse bør spesifiseres nærmere.</documentation>
+        </annotation>
+      </element>
+      <element name="originalDatavert" type="string">
+        <annotation>
+          <documentation>ansvarlig etat for forvaltning av data</documentation>
+        </annotation>
+      </element>
+      <element name="kopidato" type="dateTime">
+        <annotation>
+          <documentation>dato når objektet ble kopiert fra originaldatasettet  
+
+Merknad:
+Er en del av egenskapen Kopidata. Brukes i de tilfeller hvor en kopidatabase brukes til distribusjon.
+Å kopiere et datasett til en kopidatabase skal ikke føre til at Oppdateringsdato blir endret.
+Eventuell redigering av data i et kopidatasett medfører ny Oppdateringsdato, Datafangstdato og/eller Verifiseringsdato.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="KopidataPropertyType">
+    <sequence>
+      <element ref="app:Kopidata"/>
+    </sequence>
+  </complexType>
+  <simpleType name="MediumType">
+    <annotation>
+      <documentation>objektets beliggenhet i forhold til jordoverflaten
+
+Eksempel:
+Veg på bro, i tunnel, inne i et bygningsmessig anlegg, etc.</documentation>
+    </annotation>
+    <union memberTypes="app:MediumEnumerationType app:MediumOtherType"/>
+  </simpleType>
+  <simpleType name="MediumEnumerationType">
+    <annotation>
+      <documentation>objektets beliggenhet i forhold til jordoverflaten
+
+Eksempel:
+Veg på bro, i tunnel, inne i et bygningsmessig anlegg, etc.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="iBygning">
+        <annotation>
+          <documentation>I bygning/bygningsmessig anlegg</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="tidvisUnderVann">
+        <annotation>
+          <documentation>Tidvis under vann</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="påIsbre">
+        <annotation>
+          <documentation>På isbre</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="underIsbre">
+        <annotation>
+          <documentation>Under isbre</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="iLuft">
+        <annotation>
+          <documentation>I luft</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="påVannoverflaten">
+        <annotation>
+          <documentation>På vannoverflaten</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="påSjøbunnen">
+        <annotation>
+          <documentation>På sjøbunnen</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="påTerrenget">
+        <annotation>
+          <documentation>På terrenget/på bakkenivå. default</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="underTerrenget">
+        <annotation>
+          <documentation>Under terrenget</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="alltidIVann">
+        <annotation>
+          <documentation>Alltid i vann</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="underSjøbunnen">
+        <annotation>
+          <documentation>Under sjøbunnen</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="ukjent">
+        <annotation>
+          <documentation>ukjent</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="MediumOtherType">
+    <restriction base="string">
+      <pattern value="other: \w{2,}"/>
+    </restriction>
+  </simpleType>
   <simpleType name="NaturnivåType">
     <annotation>
       <documentation>&lt;b&gt;Naturnivå&lt;/b&gt;
@@ -451,12 +749,12 @@ Geografisk objekt typifisert eller beskrevet ved hjelp av Natur i Norges type og
               <documentation>Naturområdets stedfesting/utstrekning registert som punkt, linje eller flate.</documentation>
             </annotation>
           </element>
-          <element minOccurs="0" name="stedfestingskvalitet">
+          <element minOccurs="0" name="stedfestingskvalitet" type="app:PosisjonskvalitetPropertyType">
             <annotation>
               <documentation>Kvalitetsopplysninger om stedfestingen</documentation>
             </annotation>
           </element>
-          <element minOccurs="0" name="totalKlassifikasjonsKvalitet">
+          <element minOccurs="0" name="totalKlassifikasjonsKvalitet" type="app:NøyaktighetsklasseType">
             <annotation>
               <documentation>Kvalitet på registrerte beskrivelsesvariable i området. Klassifikasjonskvalitet for hver enkelt beskrivelsesvariable angis spesifikt for variablen.</documentation>
             </annotation>
@@ -471,7 +769,7 @@ Geografisk objekt typifisert eller beskrevet ved hjelp av Natur i Norges type og
               <documentation>Verdi er angitt hvis beskrivelsesparametre for naturområdet er karakterisert med en kombinasjon som gir tilslag i rødliste for naturtyper</documentation>
             </annotation>
           </element>
-          <element minOccurs="0" name="kartlegger">
+          <element minOccurs="0" name="kartlegger" type="app:KontaktinformasjonPropertyType">
             <annotation>
               <documentation>Kontaktinformasjon for kartlegger</documentation>
             </annotation>
@@ -486,7 +784,7 @@ Geografisk objekt typifisert eller beskrevet ved hjelp av Natur i Norges type og
               <documentation>Målestokk for kartleggingen</documentation>
             </annotation>
           </element>
-          <element minOccurs="0" name="kartlagtOmråde">
+          <element minOccurs="0" name="kartlagtOmråde" type="app:URIPropertyType">
             <annotation>
               <documentation>Link til informasjon om kartleggingen</documentation>
             </annotation>
@@ -496,7 +794,7 @@ Geografisk objekt typifisert eller beskrevet ved hjelp av Natur i Norges type og
               <documentation>Tekstlig  beskrivelse knyttet til kartleggingen av aktuelle naturområde</documentation>
             </annotation>
           </element>
-          <element maxOccurs="unbounded" minOccurs="0" name="dokument">
+          <element maxOccurs="unbounded" minOccurs="0" name="dokument" type="app:DokumentPropertyType">
             <annotation>
               <documentation>Referanse til dokumenter med relevans til kartlegging av aktuelle naturområde</documentation>
             </annotation>
@@ -511,7 +809,7 @@ Geografisk objekt typifisert eller beskrevet ved hjelp av Natur i Norges type og
               <documentation>Sektorspesifikk priortering</documentation>
             </annotation>
           </element>
-          <element name="bruksbegrensning">
+          <element name="bruksbegrensning" type="app:BruksbegrensningType">
             <annotation>
               <documentation>Angir om data  kan endres av andre enn forvalter</documentation>
             </annotation>
@@ -543,19 +841,19 @@ Typebetegnelse hentet fra Artsdatabankens standardiserte koderegistre for Natur 
               <documentation>Andel av total, målt i tideler, jf. mosaikk</documentation>
             </annotation>
           </element>
-          <element minOccurs="0" name="hovedtypegruppe">
+          <element minOccurs="0" name="hovedtypegruppe" type="app:KodePropertyType">
             <annotation>
               <documentation>Hovedtypegruppe innenfor gjeldende naturnivå. 
 Avledes av registrert kode</documentation>
             </annotation>
           </element>
-          <element minOccurs="0" name="hovedtype">
+          <element minOccurs="0" name="hovedtype" type="app:KodePropertyType">
             <annotation>
               <documentation>Hovedtype innenfor gjeldende naturnivå. 
 Avledes av registrert kode.</documentation>
             </annotation>
           </element>
-          <element minOccurs="0" name="grunntype">
+          <element minOccurs="0" name="grunntype" type="app:KodePropertyType">
             <annotation>
               <documentation>Grunntype/Kartleggingsenhet innenfor gjeldende naturnivå. 
 Avledes av registrert kode</documentation>
@@ -568,6 +866,164 @@ Avledes av registrert kode</documentation>
   <complexType name="NaturområdetypePropertyType">
     <sequence>
       <element ref="app:Naturområdetype"/>
+    </sequence>
+  </complexType>
+  <simpleType name="NøyaktighetsklasseType">
+    <annotation>
+      <documentation>grov klassifisering av nøyaktigheten til et punkts/steds plassering i forhold til noe som forutsettes kjent
+
+Merknad: Bør spesifiseres nærmere i de tilfeller denne er angitt, dvs produktspesifikasjon</documentation>
+    </annotation>
+    <union memberTypes="app:NøyaktighetsklasseEnumerationType app:NøyaktighetsklasseOtherType"/>
+  </simpleType>
+  <simpleType name="NøyaktighetsklasseEnumerationType">
+    <annotation>
+      <documentation>grov klassifisering av nøyaktigheten til et punkts/steds plassering i forhold til noe som forutsettes kjent
+
+Merknad: Bør spesifiseres nærmere i de tilfeller denne er angitt, dvs produktspesifikasjon</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="Mindre god"/>
+      <enumeration value="God"/>
+      <enumeration value="Meget god"/>
+      <enumeration value="Særs god"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="NøyaktighetsklasseOtherType">
+    <restriction base="string">
+      <pattern value="other: \w{2,}"/>
+    </restriction>
+  </simpleType>
+  <element name="Posisjonskvalitet" substitutionGroup="gml:AbstractObject" type="app:PosisjonskvalitetType">
+    <annotation>
+      <documentation>beskrivelse av kvaliteten på stedfestingen.
+
+Merknad: Posisjonskvalitet er ikke konform med  kvalitetsmodellen i ISO slik den er defineret i ISO19157:2013, men er en videreføring av tildligere brukte kvalitetsegenskaper i SOSI.</documentation>
+    </annotation>
+  </element>
+  <complexType name="PosisjonskvalitetType">
+    <sequence>
+      <element name="målemetode" type="gml:CodeType">
+        <annotation>
+          <documentation>metode for måling i grunnriss (x,y), og høyde (z) når metoden er den samme som ved måling i grunnriss</documentation>
+          <appinfo>
+            <defaultCodeSpace xmlns="http://www.opengis.net/gml/3.2">http://skjema.geonorge.no/SOSI/generelleKonsepter/generelleTyper/5.0/Målemetode</defaultCodeSpace>
+          </appinfo>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="nøyaktighet" type="integer">
+        <annotation>
+          <documentation>punktstandardavviket i grunnriss for punkter samt tverravvik for linjer
+
+Merknad:
+Oppgitt i cm</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="synbarhet" type="app:SynbarhetType">
+        <annotation>
+          <documentation>hvor godt den kartlagte detalj var synbar ved kartleggingen</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="målemetodeHøyde" type="gml:CodeType">
+        <annotation>
+          <documentation>metode for å måle høyden</documentation>
+          <appinfo>
+            <defaultCodeSpace xmlns="http://www.opengis.net/gml/3.2">http://skjema.geonorge.no/SOSI/generelleKonsepter/generelleTyper/5.0/MålemetodeHøyde</defaultCodeSpace>
+          </appinfo>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="nøyaktighetHøyde" type="integer">
+        <annotation>
+          <documentation>nøyaktighet for høyden i cm</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="maksimaltAvvik" type="integer">
+        <annotation>
+          <documentation>absolutt toleranse for geometriske avvik</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="PosisjonskvalitetPropertyType">
+    <sequence>
+      <element ref="app:Posisjonskvalitet"/>
+    </sequence>
+  </complexType>
+  <element name="ProsjektInformasjon" substitutionGroup="gml:AbstractObject" type="app:ProsjektInformasjonType">
+    <annotation>
+      <documentation>&lt;b&gt;Prosjektnformasjon&lt;/b&gt;
+Opplysninger om hvordan datasettet ble etablert</documentation>
+    </annotation>
+  </element>
+  <complexType name="ProsjektInformasjonType">
+    <sequence>
+      <element name="prosjektnavn" type="string">
+        <annotation>
+          <documentation>Prosjektbetegnelse</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="prosjektbeskrivelse" type="string">
+        <annotation>
+          <documentation>Beskrivelse av prosjektet</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="program" type="string">
+        <annotation>
+          <documentation>Navn på program som prosjektet inngår</documentation>
+        </annotation>
+      </element>
+      <element minOccurs="0" name="formål" type="string">
+        <annotation>
+          <documentation>Prosjektets formål</documentation>
+        </annotation>
+      </element>
+      <element name="oppdragsgiver" type="app:KontaktinformasjonPropertyType">
+        <annotation>
+          <documentation>Kontaktinformasjon til oppdragsgiver for etablering av datasettet</documentation>
+        </annotation>
+      </element>
+      <element name="fraDato" type="dateTime">
+        <annotation>
+          <documentation>Dato for prosjektstart</documentation>
+        </annotation>
+      </element>
+      <element name="tilDato" type="dateTime">
+        <annotation>
+          <documentation>Dato for prosjektavslutning</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="ProsjektInformasjonPropertyType">
+    <sequence>
+      <element ref="app:ProsjektInformasjon"/>
+    </sequence>
+  </complexType>
+  <element name="Registreringsversjon" substitutionGroup="gml:AbstractObject" type="app:RegistreringsversjonType">
+    <annotation>
+      <documentation>angir hvilken versjon av registreringsinstruksen som ble benyttet ved datafangst
+
+Eksempel:
+I et datasett kan det finnes objekter som er etablert fra ulike registreringsversjoner. For eksempel har registreringsinstruksen for objekttypen Takkant i FKB blitt endret fra SOSI/FKB-versjon 3.4 til versjon 4.0. Dersom en kommune ønsker å ajourføre Takkant for et delområde av kommunen etter FKB/SOSI-versjon 4.0, vil han etter ajourføring ha et kommunedekkende datasett der Takkant er registrert med forskjellig registreringsinstruks. I disse tilfellene kan det være nyttig å kunne skille på objektnivå hvilken registreringsversjon som er benyttet ved datafangst. Egenskapen kan benyttes til dette.</documentation>
+    </annotation>
+  </element>
+  <complexType name="RegistreringsversjonType">
+    <sequence>
+      <element name="produkt" type="string">
+        <annotation>
+          <documentation>entydig navn på produktet i form av et kortnavn</documentation>
+        </annotation>
+      </element>
+      <element name="versjon" type="string">
+        <annotation>
+          <documentation>versjonsnummer</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="RegistreringsversjonPropertyType">
+    <sequence>
+      <element ref="app:Registreringsversjon"/>
     </sequence>
   </complexType>
   <element name="Rødliste" substitutionGroup="gml:AbstractObject" type="app:RødlisteType">
@@ -597,6 +1053,499 @@ Avledes av registrert kode</documentation>
   <complexType name="RødlistePropertyType">
     <sequence>
       <element ref="app:Rødliste"/>
+    </sequence>
+  </complexType>
+  <simpleType name="RødlisteKategorierType">
+    <annotation>
+      <documentation>Kilde:
+Henriksen S og Hilmo O (2015) Metode. Norsk rødliste for arter 2015. Artsdatabanken </documentation>
+    </annotation>
+    <union memberTypes="app:RødlisteKategorierEnumerationType app:RødlisteKategorierOtherType"/>
+  </simpleType>
+  <simpleType name="RødlisteKategorierEnumerationType">
+    <annotation>
+      <documentation>Kilde:
+Henriksen S og Hilmo O (2015) Metode. Norsk rødliste for arter 2015. Artsdatabanken </documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="RE">
+        <annotation>
+          <documentation>en art er regionalt utdødd når det er svært liten tvil om at arten er utdødd fra aktuell region (her Norge). For at arten skal inkluderes må den ha vært etablert reproduserende i Norge etter år 1800</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="CR">
+        <annotation>
+          <documentation>en art er kritisk truet når best tilgjengelig informasjon indikerer at ett av kriteriene A-E for kritisk truet er oppfylt. Arten har da ekstremt høy risiko for utdøing</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="EN">
+        <annotation>
+          <documentation>en art er sterkt truet når best tilgjengelig informasjon indikerer at ett av kriteriene A-E for sterkt truet er oppfylt. Arten har da svært høy risiko for utdøing</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="VU">
+        <annotation>
+          <documentation>en art er sårbar når best tilgjengelig informasjon indikerer at ett av kriteriene A-E for sårbar er oppfylt. Arten har da høy risiko for utdøing</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="NT">
+        <annotation>
+          <documentation>en art er nær truet når den ikke tilfredsstiller noen av kriteriene for CR, EN eller VU, men er nære ved å tilfredsstille noen av disse kriteriene nå eller i nær framtid</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="DD">
+        <annotation>
+          <documentation>en art er får kategorien DD når usikkerheten om artens korrekte kategoriplassering er svært stor og klart inkluderer hele spekteret av mulige kategorier fra og med CR til og med LC.</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="LC">
+        <annotation>
+          <documentation>en art tilhører kategorien Livskraftig når den ikke oppfyller noen av kriteriene for kategoriene CR, EN, VU eller NT, og ikke er satt til kategoriene DD, NA eller NE</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="NE">
+        <annotation>
+          <documentation>en art tilhører kategorien Ikke vurdert når det ikke er gjort noen vurdering for arten. Dette kan foreksempel skyldes dårlig utredet taksonomi, svært dårlig kunnskapsgrunnlag eller mangel på tilgjengelig kompetanse</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="NA">
+        <annotation>
+          <documentation>en art tilhører kategorien ikke egnet når den ikke skal bedømmes på nasjonalt nivå. Dette gjelder her i hovedsak fremmede arter (arter kommet til Norge ved hjelp av mennesket eller menneskelig aktivitet etter år 1800) eller er tilfeldige gjester</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="RødlisteKategorierOtherType">
+    <restriction base="string">
+      <pattern value="other: \w{2,}"/>
+    </restriction>
+  </simpleType>
+  <element abstract="true" name="SOSI_Fellesegenskaper" substitutionGroup="gml:AbstractFeature" type="app:SOSI_FellesegenskaperType">
+    <annotation>
+      <documentation>abstrakt objekttype som bærer sentrale egenskaper som er anbefalt for bruk i produktspesifikasjoner.
+
+Merknad: Disse egenskapene skal derfor ikke modelleres inn i fagområdemodeller.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="SOSI_FellesegenskaperType">
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="identifikasjon" type="app:IdentifikasjonPropertyType">
+            <annotation>
+              <documentation>unik identifikasjon av et objekt</documentation>
+            </annotation>
+          </element>
+          <element name="oppdateringsdato" type="dateTime">
+            <annotation>
+              <documentation>dato for siste endring på objektetdataene 
+
+Merknad: 
+Oppdateringsdato kan være forskjellig fra Datafangsdato ved at data som er registrert kan bufres en kortere eller lengre periode før disse legges inn i datasystemet (databasen).</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="gyldigFra" type="dateTime">
+            <annotation>
+              <documentation>Tidspunktet når objektet oppstod i den virkelige verden</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="gyldigTil" type="dateTime">
+            <annotation>
+              <documentation>Tidspunktet når objektet opphørte å eksistere i den virkelige verden</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="SOSI_FellesegenskaperPropertyType">
+    <sequence minOccurs="0">
+      <element ref="app:SOSI_Fellesegenskaper"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <element abstract="true" name="SOSI_Objekt" substitutionGroup="app:SOSI_Fellesegenskaper" type="app:SOSI_ObjektType">
+    <annotation>
+      <documentation>abstrakt objekttype som bærer en rekke egenskaper som er fagområde-uavhengige og kan benyttes for alle objekttyper
+
+Merknad:
+Spesielt i produktspesifikasjonsarbeid vil en velge egenskaper og av grensningslinjer fra denne klassen.</documentation>
+    </annotation>
+  </element>
+  <complexType abstract="true" name="SOSI_ObjektType">
+    <complexContent>
+      <extension base="app:SOSI_FellesegenskaperType">
+        <sequence>
+          <element minOccurs="0" name="datafangstdato" type="dateTime">
+            <annotation>
+              <documentation>dato når objektet siste gang ble registrert/observert/målt i terrenget
+
+Merknad: I mange tilfeller er denne forskjellig fra Oppdateringsdato, da registrerte endringer kan bufres i en kortere eller lengre periode før disse legges inn i databasen.
+Ved førstegangsregistrering settes Datafangstdato lik førsteDatafangstdato.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="førsteDatafangstdato" type="dateTime">
+            <annotation>
+              <documentation>dato når data ble registrert/observert/målt første gang, som utgangspunkt for første digitalisering
+
+Merknad:
+førsteDatafangstdato brukes hvis det er av interesse å forvalte informasjon om når en ble klar over objektet. Dette kan for eksempel gjelde datoen for første flybilde som var utgangspunkt for registrering i en database.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="førsteDigitaliseringsdato" type="dateTime">
+            <annotation>
+              <documentation>dato når en representasjon av objektet i digital form første gang ble etablert
+
+Merknad: 
+førsteDigitaliseringsdato kan skille seg fra førsteDatafangstdato ved at den første datafangsten skjedde analogt og gjort om til digital form senere i en produksjonsprosess. 
+Eventuelt at innlegging i databasen skjedde på et senere tidspunkt enn registreringen /observasjonen / målingen av objektet.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="verifiseringsdato" type="dateTime">
+            <annotation>
+              <documentation>dato når dataene er fastslått å være i samsvar med virkeligheten
+
+Merknad: Verifiseringsdato er identisk med ..DATO i tidligere versjoner av SOSI</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="sluttdato" type="dateTime">
+            <annotation>
+              <documentation>&lt;i&gt;Dato (og tid) for når denne versjonen av objektet var erstattet eller opphørt å eksistere&lt;/i&gt;
+
+-- Definition -- 
+Date and time at which this version of the spatial object was inserted or changed in the spatial data set.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="datauttaksdato" type="dateTime">
+            <annotation>
+              <documentation>dato for uttak fra en database
+
+Merknad:
+Skiller seg fra Kopidato ved at en ikke skiller på om det er uttak fra en originaldatabase eller en kopidatabase.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="endringsflagg" type="app:EndringsflaggPropertyType">
+            <annotation>
+              <documentation>endringsinformasjon om et objekt 
+
+Merknad: 
+Reglene knyttet til bruken av endringsflagg er for denne versjonen ikke avklart. Utdypes nærmere i produktspesifikasjonen basert på 4.0.
+
+Merknad: 
+Endringsflagg kan benyttes til å merke slettede "objekter".
+
+Eksempel: 
+Dersom en eiendomsgrense endres skal endringsflagg også legges inn på eiendomsteigen</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="kvalitet" type="app:PosisjonskvalitetPropertyType">
+            <annotation>
+              <documentation>beskrivelse av kvaliteten på stedfestingen
+
+Merknad: Denne er identisk med ..KVALITET i tidligere versjoner av SOSI.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="status" type="app:StatusType">
+            <annotation>
+              <documentation>objektets tilstand
+
+Eksempel: Brukes, drift, foreldet, planlagt  etc</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="medium" type="app:MediumType">
+            <annotation>
+              <documentation>objektets beliggenhet i forhold til jordoverflaten
+
+Eksempel:
+På bro, i tunnel, inne i et bygningsmessig anlegg, etc.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="opphav" type="string">
+            <annotation>
+              <documentation>referanse til opphavsmaterialet, kildematerialet, organisasjons/publiseringskilde
+
+Merknad: 
+Kan også beskrive navn på person og årsak til oppdatering</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="digitaliseringsmålestokk" type="integer">
+            <annotation>
+              <documentation>kartmålestokk registreringene/ datene er hentet fra/ registrert på
+
+Eksempel: 1:50 000 = 50000.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="prosesshistorie" type="string">
+            <annotation>
+              <documentation>beskrivelse av de prosesser som dataene er gått gjennom som kan ha betydning for kvaliteten og bruken av dataene
+
+Merknad:
+Prosesshistorie vil kunne inneholde informasjon om transformasjoner. Hva slags informasjon som angis er ofte gitt i andre standarder, f.eks kvalitet og kvalitetsikring.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="kopidata" type="app:KopidataPropertyType">
+            <annotation>
+              <documentation>angivelse av at objektet er hentet fra et kopidatasett og ikke fra originaldatasettet
+
+Merknad: Inneholder informasjon om når kopidatasettet ble kopiert fra originaldatasettet og hvem som er originaldataansvarlig</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="informasjon" type="string">
+            <annotation>
+              <documentation>generell opplysning
+
+Merknad:
+mulighet til å legge inn utfyllende informasjon om objektet</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="registreringsversjon" type="app:RegistreringsversjonPropertyType">
+            <annotation>
+              <documentation>angivelse av hvilken produktspesifikasjon som er utgangspunkt  for dataene</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="link" type="app:URIPropertyType">
+            <annotation>
+              <documentation>referanse  til et informasjonselement, enten lokalt eller globalt</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="geodataeier" type="string">
+            <annotation>
+              <documentation>rettighetshaver til datasettet/tjenesten</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="geodataprodusent" type="string">
+            <annotation>
+              <documentation>organisasjon som har produsert datasettet/tjenesten</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="kontaktperson" type="string">
+            <annotation>
+              <documentation>person som kan kontaktes i forbindelse med en forespørsel</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="høydeOverBakken" type="double">
+            <annotation>
+              <documentation>objekts høyde over bakken
+
+Merknad:
+Kan være aktuelt i forbindelse med ulike typer objekter med utstrekning i høyde, slik som telefonstolper, gjerde, etc. Må brukes med forsiktighet og det må komme klart fram hvilke detalj av objektet eller objektets overbygning høyden relateres til.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="høydereferanse" type="app:HøydereferanseType">
+            <annotation>
+              <documentation>koordinatregistering utført på topp eller bunn av et objekt</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="SOSI_ObjektPropertyType">
+    <sequence minOccurs="0">
+      <element ref="app:SOSI_Objekt"/>
+    </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
+  </complexType>
+  <simpleType name="StatusType">
+    <annotation>
+      <documentation>objektets tilstand
+
+Eksempel: 
+Brukes, drift, foreldet, planlagt etc
+
+
+-- Definition - - 
+the condition of the object    Examples:In use, in operation, obsolete, planned, etc.</documentation>
+    </annotation>
+    <union memberTypes="app:StatusEnumerationType app:StatusOtherType"/>
+  </simpleType>
+  <simpleType name="StatusEnumerationType">
+    <annotation>
+      <documentation>objektets tilstand
+
+Eksempel: 
+Brukes, drift, foreldet, planlagt etc
+
+
+-- Definition - - 
+the condition of the object    Examples:In use, in operation, obsolete, planned, etc.</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="brukes">
+        <annotation>
+          <documentation>Brukes</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="drift">
+        <annotation>
+          <documentation>Drift</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="eksisterende">
+        <annotation>
+          <documentation>Eksisterende (default). Identisk med tidligere SITSTAT = 3</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="foreldet">
+        <annotation>
+          <documentation>Foreldet. Identisk med tidligere SITSTAT = 4 historisk</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="fjernet">
+        <annotation>
+          <documentation>Fjernet</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="kondemnert">
+        <annotation>
+          <documentation>Kondemnert</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="nedlagt">
+        <annotation>
+          <documentation>Nedlagt</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="ombygd">
+        <annotation>
+          <documentation>Ombygd</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="planlagt">
+        <annotation>
+          <documentation>Planlagt</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="underArbeid">
+        <annotation>
+          <documentation>Under arbeid</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="iForfall">
+        <annotation>
+          <documentation>I forfall</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="planlagtIllustrert">
+        <annotation>
+          <documentation>Planlagt illustrert. Illustrert fremtidig situasjon (Tidligere SITSTAT = 1)</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="planlagtOgProsjektert">
+        <annotation>
+          <documentation>Planlagt, prosjektert. Prosjektert fremtidig situasjon (Tidligere SITSTAT = 2)</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="vedtatt">
+        <annotation>
+          <documentation>Vedtatt</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="tenktTattIBruk">
+        <annotation>
+          <documentation>Tenkt tatt i bruk</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="StatusOtherType">
+    <restriction base="string">
+      <pattern value="other: \w{2,}"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="SynbarhetType">
+    <annotation>
+      <documentation>hvor godt den kartlagte detalj var synbar ved kartleggingen</documentation>
+    </annotation>
+    <union memberTypes="app:SynbarhetEnumerationType app:SynbarhetOtherType"/>
+  </simpleType>
+  <simpleType name="SynbarhetEnumerationType">
+    <annotation>
+      <documentation>hvor godt den kartlagte detalj var synbar ved kartleggingen</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="fulltSynligOgGjenfinnbarITerrenget">
+        <annotation>
+          <documentation>Fullt ut synlig/gjenfinnbar i terrenget
+Default</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="dårligGjenfinnbarITerrenget">
+        <annotation>
+          <documentation>Dårlig gjenfinnbari terreng.
+Forøvrig grei å innmåle. (Benyttes bl.a. for innmåling av ledninger på lukket grøft)</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="middelsSynligIFlybilde">
+        <annotation>
+          <documentation>Middels synlig i flybilde/modell</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="dårligSynligIFlybilde">
+        <annotation>
+          <documentation>Dårlig/ikke synlig i flybilde/modell</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="SynbarhetOtherType">
+    <restriction base="string">
+      <pattern value="other: \w{2,}"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="TypeEndringType">
+    <annotation>
+      <documentation>endringsstatus for objektet</documentation>
+    </annotation>
+    <union memberTypes="app:TypeEndringEnumerationType app:TypeEndringOtherType"/>
+  </simpleType>
+  <simpleType name="TypeEndringEnumerationType">
+    <annotation>
+      <documentation>endringsstatus for objektet</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="endret">
+        <annotation>
+          <documentation>Endret</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="nytt">
+        <annotation>
+          <documentation>Nytt</documentation>
+        </annotation>
+      </enumeration>
+      <enumeration value="slettet">
+        <annotation>
+          <documentation>Slettet</documentation>
+        </annotation>
+      </enumeration>
+    </restriction>
+  </simpleType>
+  <simpleType name="TypeEndringOtherType">
+    <restriction base="string">
+      <pattern value="other: \w{2,}"/>
+    </restriction>
+  </simpleType>
+  <element name="URI" substitutionGroup="gml:AbstractObject" type="app:URIType">
+    <annotation>
+      <documentation>&lt;b&gt;URI&lt;/b&gt;
+«Uniform Resource Identifier») er en kompakt tekstrengstreng av tegn som identifiserer en abstrakt eller fysisk ressurs, f.eks  en Internett-adresse.</documentation>
+    </annotation>
+  </element>
+  <complexType name="URIType">
+    <sequence>
+      <element name="uri" type="string">
+        <annotation>
+          <documentation>Tekststreng som identifiserer en abstrakt eller fysisk ressurs.</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="URIPropertyType">
+    <sequence>
+      <element ref="app:URI"/>
     </sequence>
   </complexType>
 </schema>
