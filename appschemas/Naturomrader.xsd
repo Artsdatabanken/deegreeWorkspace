@@ -1,50 +1,78 @@
-<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:app="http://skjema.artsdatabanken.no/NiNCore/Naturomrader" xmlns:gml="http://www.opengis.net/gml/3.2" elementFormDefault="qualified" targetNamespace="http://skjema.artsdatabanken.no/NiNCore/Naturomrader" version="0.5">
+<?xml version="1.0" encoding="UTF-8"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:app="http://skjema.artsdatabanken.no/NiNCore/Naturomrader" xmlns:gml="http://www.opengis.net/gml/3.2" elementFormDefault="qualified" targetNamespace="http://skjema.artsdatabanken.no/NiNCore/Naturomrader" version="0.1">
   <annotation>
     <documentation>Produktspesifikasjon for NiN Core GML Naturområder</documentation>
   </annotation>
   <import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
   <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
-  <element abstract="true" name="BeskrivelsesParameter" substitutionGroup="gml:AbstractObject" type="app:BeskrivelsesParameterType">
+  <element abstract="true" name="BeskrivelsesParameter" substitutionGroup="gml:AbstractFeature" type="app:BeskrivelsesParameterType">
     <annotation>
       <documentation>&lt;b&gt;BeskrivelsesParameter&lt;/b&gt;
 Overordnet abstrakt objekttype for ulike naturfaglige beskrivelser av naturområdet</documentation>
     </annotation>
   </element>
   <complexType abstract="true" name="BeskrivelsesParameterType">
-    <sequence>
-      <element name="kodeverdi" type="app:KodePropertyType">
-        <annotation>
-          <documentation>Registrert verdi for unik standardisert kode (enten NaturområdeType eller BeskrivelsesVariabel).</documentation>
-        </annotation>
-      </element>
-      <element minOccurs="0" name="tematiskId" type="string">
-        <annotation>
-          <documentation>Dataeiers ident for beskrivelsesparameteren</documentation>
-        </annotation>
-      </element>
-      <element minOccurs="0" name="kartlegger" type="app:KontaktinformasjonPropertyType">
-        <annotation>
-          <documentation>Kontaktinformasjon for person som utførte feltarbeidet</documentation>
-        </annotation>
-      </element>
-      <element minOccurs="0" name="kartlagtDato" type="dateTime">
-        <annotation>
-          <documentation>Dato for feltarbeid</documentation>
-        </annotation>
-      </element>
-      <element minOccurs="0" name="klassifikasjonsNøyaktighet" type="app:NøyaktighetsklasseType">
-        <annotation>
-          <documentation>Opplysning om registreringens kvalitet</documentation>
-        </annotation>
-      </element>
-      <element maxOccurs="unbounded" minOccurs="0" name="tilleggsinformasjon" type="app:EgendefinertVariabelPropertyType"/>
-      <element maxOccurs="unbounded" minOccurs="0" name="tilleggsvariabel" type="app:BeskrivelsesParameterPropertyType"/>
-    </sequence>
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="kodeverdi" type="app:KodePropertyType">
+            <annotation>
+              <documentation>Registrert verdi for unik standardisert kode (enten NaturområdeType eller BeskrivelsesVariabel).</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="tematiskId" type="string">
+            <annotation>
+              <documentation>Dataeiers ident for beskrivelsesparameteren</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="kartlegger" type="app:KontaktinformasjonPropertyType">
+            <annotation>
+              <documentation>Kontaktinformasjon for person som utførte feltarbeidet</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="kartlagtDato" type="dateTime">
+            <annotation>
+              <documentation>Dato for feltarbeid</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="klassifikasjonsNøyaktighet" type="app:NøyaktighetsklasseType">
+            <annotation>
+              <documentation>Opplysning om registreringens kvalitet</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="tilleggsinformasjon">
+            <complexType>
+              <complexContent>
+                <extension base="gml:AbstractMemberType">
+                  <sequence minOccurs="0">
+                    <element ref="app:EgendefinertVariabel"/>
+                  </sequence>
+                  <attributeGroup ref="gml:AssociationAttributeGroup"/>
+                </extension>
+              </complexContent>
+            </complexType>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="tilleggsvariabel">
+            <complexType>
+              <complexContent>
+                <extension base="gml:AbstractMemberType">
+                  <sequence minOccurs="0">
+                    <element ref="app:BeskrivelsesParameter"/>
+                  </sequence>
+                  <attributeGroup ref="gml:AssociationAttributeGroup"/>
+                </extension>
+              </complexContent>
+            </complexType>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
   </complexType>
   <complexType name="BeskrivelsesParameterPropertyType">
-    <sequence>
+    <sequence minOccurs="0">
       <element ref="app:BeskrivelsesParameter"/>
     </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
   </complexType>
   <element name="Beskrivelsesvariabel" substitutionGroup="app:BeskrivelsesParameter" type="app:BeskrivelsesvariabelType">
     <annotation>
@@ -88,9 +116,11 @@ Avledes av kodeverdien</documentation>
     </complexContent>
   </complexType>
   <complexType name="BeskrivelsesvariabelPropertyType">
-    <sequence>
+    <sequence minOccurs="0">
       <element ref="app:Beskrivelsesvariabel"/>
     </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
   </complexType>
   <simpleType name="BruksbegrensningType">
     <union memberTypes="app:BruksbegrensningEnumerationType app:BruksbegrensningOtherType"/>
@@ -177,52 +207,58 @@ Dokumentkategori, f.eks rapport, bilde,</documentation>
       <pattern value="other: \w{2,}"/>
     </restriction>
   </simpleType>
-  <element name="EgendefinertVariabel" substitutionGroup="gml:AbstractObject" type="app:EgendefinertVariabelType">
+  <element name="EgendefinertVariabel" substitutionGroup="gml:AbstractFeature" type="app:EgendefinertVariabelType">
     <annotation>
       <documentation>&lt;b&gt;EgendefinertVariable&lt;/b&gt;
 Registrering av dataeiers egendefinerte variabel som knyttes til en naturområdetype</documentation>
     </annotation>
   </element>
   <complexType name="EgendefinertVariabelType">
-    <sequence>
-      <element name="kodeverdi" type="string">
-        <annotation>
-          <documentation>Kode (betegnelsen) for den egendefinerte variabelen.</documentation>
-        </annotation>
-      </element>
-      <element name="kodeDefinisjon" type="string">
-        <annotation>
-          <documentation>Definisjon av egendefinert variabel. 
+    <complexContent>
+      <extension base="gml:AbstractFeatureType">
+        <sequence>
+          <element name="kodeverdi" type="string">
+            <annotation>
+              <documentation>Kode (betegnelsen) for den egendefinerte variabelen.</documentation>
+            </annotation>
+          </element>
+          <element name="kodeDefinisjon" type="string">
+            <annotation>
+              <documentation>Definisjon av egendefinert variabel. 
 Avledes fra informasjon i kartlagt område som naturområdet tilhører</documentation>
-        </annotation>
-      </element>
-      <element minOccurs="0" name="trinn" type="string">
-        <annotation>
-          <documentation>Trinn (verdi) for den egendefinerte variabelen.</documentation>
-        </annotation>
-      </element>
-      <element minOccurs="0" name="kartlegger" type="app:KontaktinformasjonPropertyType">
-        <annotation>
-          <documentation>Kartlegger med kontaktinformasjon</documentation>
-        </annotation>
-      </element>
-      <element minOccurs="0" name="kartlagtDato" type="dateTime">
-        <annotation>
-          <documentation>Dato for registrering av variabel</documentation>
-        </annotation>
-      </element>
-      <element minOccurs="0" name="klassifikasjonsNøyaktighet" type="app:NøyaktighetsklasseType">
-        <annotation>
-          <documentation>Kvalitet på registreringen</documentation>
-        </annotation>
-      </element>
-      <element name="kodeDefinertVed" type="app:EgendefinertVariabelDefinisjonPropertyType"/>
-    </sequence>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="trinn" type="string">
+            <annotation>
+              <documentation>Trinn (verdi) for den egendefinerte variabelen.</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="kartlegger" type="app:KontaktinformasjonPropertyType">
+            <annotation>
+              <documentation>Kartlegger med kontaktinformasjon</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="kartlagtDato" type="dateTime">
+            <annotation>
+              <documentation>Dato for registrering av variabel</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="klassifikasjonsNøyaktighet" type="app:NøyaktighetsklasseType">
+            <annotation>
+              <documentation>Kvalitet på registreringen</documentation>
+            </annotation>
+          </element>
+          <element name="kodeDefinertVed" type="app:EgendefinertVariabelDefinisjonPropertyType"/>
+        </sequence>
+      </extension>
+    </complexContent>
   </complexType>
   <complexType name="EgendefinertVariabelPropertyType">
-    <sequence>
+    <sequence minOccurs="0">
       <element ref="app:EgendefinertVariabel"/>
     </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
   </complexType>
   <element name="EgendefinertVariabelDefinisjon" substitutionGroup="gml:AbstractObject" type="app:EgendefinertVariabelDefinisjonType">
     <annotation>
@@ -814,7 +850,18 @@ Geografisk objekt typifisert eller beskrevet ved hjelp av Natur i Norges type og
               <documentation>Angir om data  kan endres av andre enn forvalter</documentation>
             </annotation>
           </element>
-          <element maxOccurs="unbounded" name="beskrivesVed" type="app:BeskrivelsesParameterPropertyType"/>
+          <element maxOccurs="unbounded" name="beskrivesVed">
+            <complexType>
+              <complexContent>
+                <extension base="gml:AbstractMemberType">
+                  <sequence minOccurs="0">
+                    <element ref="app:BeskrivelsesParameter"/>
+                  </sequence>
+                  <attributeGroup ref="gml:AssociationAttributeGroup"/>
+                </extension>
+              </complexContent>
+            </complexType>
+          </element>
         </sequence>
       </extension>
     </complexContent>
@@ -864,9 +911,11 @@ Avledes av registrert kode</documentation>
     </complexContent>
   </complexType>
   <complexType name="NaturområdetypePropertyType">
-    <sequence>
+    <sequence minOccurs="0">
       <element ref="app:Naturområdetype"/>
     </sequence>
+    <attributeGroup ref="gml:AssociationAttributeGroup"/>
+    <attributeGroup ref="gml:OwnershipAttributeGroup"/>
   </complexType>
   <simpleType name="NøyaktighetsklasseType">
     <annotation>
